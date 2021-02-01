@@ -4,7 +4,7 @@
 
         <item
             android:id="@+id/search_view"
-            android:title="Search For News Article"
+            android:title="@string/SearchIcon"
             android:icon="@android:drawable/ic_menu_search"
             app:showAsAction="always|collapseActionView"
             app:actionViewClass="androidx.appcompat.widget.SearchView"/>

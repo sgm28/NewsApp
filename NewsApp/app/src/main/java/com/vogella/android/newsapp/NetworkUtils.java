@@ -26,15 +26,6 @@ public class NetworkUtils {
 
     private static final String LOG_TAG = NetworkUtils.class.getSimpleName();
 
-    //Endpoint for News
-    private static String NEWS_BASE_URL = "https://content.guardianapis.com/search?";
-
-    // Query Parameter
-    private static final String QUERY_PARAM = "q";
-    private static final String SHOW_TAGS= "show-tags";
-    private static final String SHOW_FIELDS= "show-fields";
-    private static final String API_KEY="api-key";
-    private static String query_param_value = null;
 
 
 
@@ -56,14 +47,7 @@ public class NetworkUtils {
         String newsJSONString = null;
 
         try{
-            //Building the URL
-            Uri builtURI = Uri.parse(NEWS_BASE_URL).buildUpon()
-               //     .appendQueryParameter(QUERY_PARAM,"")
-                    .appendQueryParameter(SHOW_TAGS,"contributor")
-                    .appendQueryParameter(SHOW_FIELDS, "thumbnail")
-                    .appendQueryParameter(API_KEY,"test")
-                    .build();
-            Log.d(LOG_TAG, builtURI.toString());
+
 
             //Convert to a URL
             URL requestURL = new URL(url.toString());

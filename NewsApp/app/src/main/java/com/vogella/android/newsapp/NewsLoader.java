@@ -21,12 +21,7 @@ public class NewsLoader extends AsyncTaskLoader<List<News>>  {
     List<News> news;
 
 
-    // Query Parameter
-    private static final String QUERY_PARAM = "q";
-    private static final String SHOW_TAGS= "show-tags";
-    private static final String SHOW_FIELDS= "show-fields";
-    private static final String API_KEY="api-key";
-    private static String query_param_value = null;
+
 
 
 

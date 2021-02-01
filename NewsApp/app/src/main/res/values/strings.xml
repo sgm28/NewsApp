@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name">News App</string>
+    <string name="NoInternetMessage">No internet connection</string>
+    <string name="NoNewsMessage">No News to display</string>
+    <string name="author">contributor</string>
+    <string name="picture">thumbnail</string>
+    <string name="key">test</string>
+    <string name="SearchIcon">Search For News Article</string>
 
 
 </resources>

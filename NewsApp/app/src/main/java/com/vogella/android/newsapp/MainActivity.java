@@ -24,16 +24,21 @@
 
     import java.util.ArrayList;
     import java.util.List;
-    //Implementing the  OnNewsClick
+    //Implementing the  OnNewsClick and OnQueryTextListener
     public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<News>>, NewsAdapter.OnNewsListener, SearchView.OnQueryTextListener {
-    //changing the save date
+        
     RecyclerView rvNews;
     NewsAdapter newsAdapter;
     List<News> data;
-    TextView emptyView;
-    //Endpoint for News
+    TextView emptyView; //This view will appear if no network connection exists. 
+        
+        private static String LOG_TAG = MainActivity.class.getSimpleName();
+        //Endpoint for guardian api
+        
+        //I cannot get the string resource of NEWS_BASE_URL
     private static String NEWS_BASE_URL = "https://content.guardianapis.com/search?";
-    // Query Parameter
+   
+    // Query Parameters - Because my variables are static I cannot convert to string resource.
     private static final String QUERY_PARAM = "q";
     private static final String SHOW_TAGS = "show-tags";
     private static final String SHOW_FIELDS = "show-fields";
@@ -42,6 +47,8 @@
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        
+        
     super.onCreate(savedInstanceState);
     setContentView(R.layout.recycler_view_layout);
 
@@ -70,7 +77,7 @@
     progressBar.setVisibility(View.GONE);
     rvNews.setVisibility(View.GONE);
     emptyView.setVisibility(View.VISIBLE);
-    emptyView.setText("No internet connection");
+    emptyView.setText(R.string.NoInternetMessage);
 
     }
 
@@ -87,9 +94,9 @@
     {
     builtURI = Uri.parse(NEWS_BASE_URL).buildUpon()
     // .appendQueryParameter(QUERY_PARAM, query_param_value)
-    .appendQueryParameter(SHOW_TAGS, "contributor")
-    .appendQueryParameter(SHOW_FIELDS, "thumbnail")
-    .appendQueryParameter(API_KEY, "test")
+    .appendQueryParameter(SHOW_TAGS, getString(R.string.author))
+    .appendQueryParameter(SHOW_FIELDS, getString(R.string.picture))
+    .appendQueryParameter(API_KEY, getString(R.string.key))
     .build();
     }
 
@@ -97,9 +104,9 @@
     {
     builtURI = Uri.parse(NEWS_BASE_URL).buildUpon()
     .appendQueryParameter(QUERY_PARAM, query_param_value)
-    .appendQueryParameter(SHOW_TAGS, "contributor")
-    .appendQueryParameter(SHOW_FIELDS, "thumbnail")
-    .appendQueryParameter(API_KEY, "test")
+    .appendQueryParameter(SHOW_TAGS, getString(R.string.author))
+    .appendQueryParameter(SHOW_FIELDS, getString(R.string.picture))
+    .appendQueryParameter(API_KEY, getString(R.string.key))
     .build();
     }
 
@@ -122,7 +129,7 @@
     if (data.isEmpty()) {
     rvNews.setVisibility(View.GONE);
     emptyView.setVisibility(View.VISIBLE);
-    emptyView.setText("No News to display");
+    emptyView.setText(R.string.NoNewsMessage);
 
     } else {
 
@@ -165,7 +172,7 @@
     @Override
     public boolean onQueryTextSubmit(String query) {
     query_param_value=query;
-    Log.d("Main activity", query_param_value);
+    Log.d(LOG_TAG, query_param_value);
     getLoaderManager().restartLoader(0, null, this);
     return true;
     }
@@ -174,7 +181,7 @@
     public boolean onQueryTextChange(String newText) {
 
     query_param_value=newText;
-    Log.d("Main activity", query_param_value);
+    Log.d(LOG_TAG, query_param_value);
     getLoaderManager().restartLoader(0, null, this);
 
     return true;
