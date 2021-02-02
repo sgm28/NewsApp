@@ -27,14 +27,9 @@ public class NetworkUtils {
     private static final String LOG_TAG = NetworkUtils.class.getSimpleName();
 
 
-
-
-
-
     //thumbnail
 
-    public static String getNewsData(String url)
-    {
+    public static String getNewsData(String url) {
 
         //Slowing the data process so the progress bar loader displays.
         try {
@@ -46,7 +41,7 @@ public class NetworkUtils {
         BufferedReader reader = null;
         String newsJSONString = null;
 
-        try{
+        try {
 
 
             //Convert to a URL
@@ -68,16 +63,14 @@ public class NetworkUtils {
             StringBuilder builder = new StringBuilder();
 
             String line;
-            while ((line = reader.readLine()) != null)
-            {
+            while ((line = reader.readLine()) != null) {
                 builder.append(line);
 
                 builder.append("\n"); //Makes debugging easier
 
             }
 
-            if (builder.length() == 0)
-            {
+            if (builder.length() == 0) {
                 return null;
             }
 
@@ -85,21 +78,17 @@ public class NetworkUtils {
 
 
         } catch (MalformedURLException e) {
-           Log.e(LOG_TAG, "Error building url");
+            Log.e(LOG_TAG, "Error building url");
         } catch (ProtocolException e) {
             Log.e(LOG_TAG, "Problem with setRequestMethod");
         } catch (IOException e) {
             Log.e(LOG_TAG, "Problem with openConnection and connect");
-        }
-
-        finally {
+        } finally {
             //Close the connection
-            if(urlConnection != null)
-            {
+            if (urlConnection != null) {
                 urlConnection.disconnect();
             }
-            if (reader != null)
-            {
+            if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException e) {
@@ -113,14 +102,13 @@ public class NetworkUtils {
     }
 
     //Image data
-    public static Bitmap getNewsImagePerArticle(String urlImage)
-    {
+    public static Bitmap getNewsImagePerArticle(String urlImage) {
         Bitmap bmp = null;
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         String newsJSONString = null;
 
-        try{
+        try {
             //Building the URL
             Uri builtURI = Uri.parse(urlImage).buildUpon().build();
 
@@ -139,24 +127,18 @@ public class NetworkUtils {
             bmp = BitmapFactory.decodeStream(inputStream);
 
 
-
-
         } catch (MalformedURLException e) {
             Log.e(LOG_TAG, "Error building url");
         } catch (ProtocolException e) {
             Log.e(LOG_TAG, "Problem with setRequestMethod");
         } catch (IOException e) {
             Log.e(LOG_TAG, "Problem with openConnection and connect");
-        }
-
-        finally {
+        } finally {
             //Close the connection
-            if(urlConnection != null)
-            {
+            if (urlConnection != null) {
                 urlConnection.disconnect();
             }
-            if (reader != null)
-            {
+            if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException e) {
@@ -169,7 +151,6 @@ public class NetworkUtils {
 
         }
     }
-
 
 
 }

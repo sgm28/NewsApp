@@ -1,43 +1,45 @@
-    package com.vogella.android.newsapp;
+package com.vogella.android.newsapp;
 
-    import androidx.appcompat.app.AppCompatActivity;
-    import androidx.appcompat.widget.SearchView;
-    import androidx.recyclerview.widget.LinearLayoutManager;
-    import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-    import android.app.LoaderManager;
-    import android.content.Context;
-    import android.content.Intent;
-    import android.content.Loader;
-    import android.net.ConnectivityManager;
-    import android.net.NetworkInfo;
-    import android.net.Uri;
-    import android.os.Bundle;
-    import android.util.Log;
-    import android.view.Menu;
-    import android.view.MenuItem;
-    import android.view.View;
-    import android.widget.ProgressBar;
+import android.app.LoaderManager;
+import android.content.Context;
+import android.content.Intent;
+import android.content.Loader;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 
 
-    import android.widget.TextView;
+import android.widget.TextView;
 
-    import java.util.ArrayList;
-    import java.util.List;
-    //Implementing the  OnNewsClick and OnQueryTextListener
-    public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<News>>, NewsAdapter.OnNewsListener, SearchView.OnQueryTextListener {
-        
+import java.util.ArrayList;
+import java.util.List;
+
+//Implementing the  OnNewsClick and OnQueryTextListener
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<News>>, NewsAdapter.OnNewsListener, SearchView.OnQueryTextListener {
+
     RecyclerView rvNews;
     NewsAdapter newsAdapter;
     List<News> data;
     TextView emptyView; //This view will appear if no network connection exists. 
-        
-        private static String LOG_TAG = MainActivity.class.getSimpleName();
-        //Endpoint for guardian api
-        
-        //I cannot get the string resource of NEWS_BASE_URL
+
+    private static String LOG_TAG = MainActivity.class.getSimpleName();
+    //Endpoint for guardian api
+
+    //I cannot get the string resource of NEWS_BASE_URL
     private static String NEWS_BASE_URL = "https://content.guardianapis.com/search?";
-   
+
     // Query Parameters - Because my variables are static I cannot convert to string resource.
     private static final String QUERY_PARAM = "q";
     private static final String SHOW_TAGS = "show-tags";
@@ -47,39 +49,39 @@
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        
-        
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.recycler_view_layout);
-
-    emptyView = (TextView) findViewById(R.id.empty_view);
-    emptyView.setVisibility(View.GONE);
-    rvNews = (RecyclerView) findViewById(R.id.rvNews);
-    newsAdapter = new NewsAdapter(new ArrayList<News>(), this);
-    rvNews.setAdapter(newsAdapter);
-    rvNews.setLayoutManager(new LinearLayoutManager(this));
 
 
-    //Checking the internet status
-    ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.recycler_view_layout);
 
-    NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-    boolean isConnected = activeNetwork != null &&
-    activeNetwork.isConnectedOrConnecting();
+        emptyView = (TextView) findViewById(R.id.empty_view);
+        emptyView.setVisibility(View.GONE);
+        rvNews = (RecyclerView) findViewById(R.id.rvNews);
+        newsAdapter = new NewsAdapter(new ArrayList<News>(), this);
+        rvNews.setAdapter(newsAdapter);
+        rvNews.setLayoutManager(new LinearLayoutManager(this));
 
-    if (isConnected) {
-    LoaderManager loaderManager = getLoaderManager();
+        rvNews.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        //Checking the internet status
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
-    loaderManager.initLoader(0, null, this);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
 
-    } else {
-    ProgressBar progressBar = findViewById(R.id.indeterminateBar);
-    progressBar.setVisibility(View.GONE);
-    rvNews.setVisibility(View.GONE);
-    emptyView.setVisibility(View.VISIBLE);
-    emptyView.setText(R.string.NoInternetMessage);
+        if (isConnected) {
+            LoaderManager loaderManager = getLoaderManager();
 
-    }
+            loaderManager.initLoader(0, null, this);
+
+        } else {
+            ProgressBar progressBar = findViewById(R.id.indeterminateBar);
+            progressBar.setVisibility(View.GONE);
+            rvNews.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+            emptyView.setText(R.string.NoInternetMessage);
+
+        }
 
 
     }
@@ -88,103 +90,98 @@
     //Loader Stuff
     @Override
     public Loader<List<News>> onCreateLoader(int id, Bundle args) {
-    Uri builtURI;
-    //Building the
-    if (query_param_value == null)
-    {
-    builtURI = Uri.parse(NEWS_BASE_URL).buildUpon()
-    // .appendQueryParameter(QUERY_PARAM, query_param_value)
-    .appendQueryParameter(SHOW_TAGS, getString(R.string.author))
-    .appendQueryParameter(SHOW_FIELDS, getString(R.string.picture))
-    .appendQueryParameter(API_KEY, getString(R.string.key))
-    .build();
-    }
-
-    else
-    {
-    builtURI = Uri.parse(NEWS_BASE_URL).buildUpon()
-    .appendQueryParameter(QUERY_PARAM, query_param_value)
-    .appendQueryParameter(SHOW_TAGS, getString(R.string.author))
-    .appendQueryParameter(SHOW_FIELDS, getString(R.string.picture))
-    .appendQueryParameter(API_KEY, getString(R.string.key))
-    .build();
-    }
+        Uri builtURI;
+        //Building the
+        if (query_param_value == null) {
+            builtURI = Uri.parse(NEWS_BASE_URL).buildUpon()
+                    // .appendQueryParameter(QUERY_PARAM, query_param_value)
+                    .appendQueryParameter(SHOW_TAGS, getString(R.string.author))
+                    .appendQueryParameter(SHOW_FIELDS, getString(R.string.picture))
+                    .appendQueryParameter(API_KEY, getString(R.string.key))
+                    .build();
+        } else {
+            builtURI = Uri.parse(NEWS_BASE_URL).buildUpon()
+                    .appendQueryParameter(QUERY_PARAM, query_param_value)
+                    .appendQueryParameter(SHOW_TAGS, getString(R.string.author))
+                    .appendQueryParameter(SHOW_FIELDS, getString(R.string.picture))
+                    .appendQueryParameter(API_KEY, getString(R.string.key))
+                    .build();
+        }
 
 
-
-    return new NewsLoader(this, builtURI.toString());
+        return new NewsLoader(this, builtURI.toString());
     }
 
     @Override
     public void onLoadFinished(Loader<List<News>> loader, List<News> data) {
-    //Setting the progress bar to invisible after data loaded
-    ProgressBar progressBar = findViewById(R.id.indeterminateBar);
-    progressBar.setVisibility(View.GONE);
+        //Setting the progress bar to invisible after data loaded
+        ProgressBar progressBar = findViewById(R.id.indeterminateBar);
+        progressBar.setVisibility(View.GONE);
 
-    //TESTING PURPOSES - testing if my text view will display if the list data is empty
-    // data.clear();
+        //TESTING PURPOSES - testing if my text view will display if the list data is empty
+        // data.clear();
 
 
-    //Deciding which view to display based on whether or not the data is empty
-    if (data.isEmpty()) {
-    rvNews.setVisibility(View.GONE);
-    emptyView.setVisibility(View.VISIBLE);
-    emptyView.setText(R.string.NoNewsMessage);
+        //Deciding which view to display based on whether or not the data is empty
+        if (data.isEmpty()) {
+            rvNews.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+            emptyView.setText(R.string.NoNewsMessage);
 
-    } else {
+        } else {
 
-    //Update the UI
+            //Update the UI
 
-    newsAdapter.setData(data);
-    newsAdapter.notifyDataSetChanged();
-    this.data = data;
+            newsAdapter.setData(data);
+            newsAdapter.notifyDataSetChanged();
+            this.data = data;
 
-    }
+        }
 
 
     }
 
     @Override
     public void onLoaderReset(Loader<List<News>> loader) {
-    //Clean up
+        //Clean up
     }
 
     @Override
     public void OnNewsClick(int position) {
 
-    String url = data.get(position).getWebUrl();
+        String url = data.get(position).getWebUrl();
 
 
-    Intent i = new Intent(Intent.ACTION_VIEW);
-    i.setData(Uri.parse(url));
-    startActivity(i);
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        startActivity(i);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.main, menu);
-    MenuItem item = menu.findItem(R.id.search_view);
-    SearchView searchView = (SearchView) item.getActionView();
-    searchView.setOnQueryTextListener(this);
-    return true;
+        getMenuInflater().inflate(R.menu.main, menu);
+        MenuItem item = menu.findItem(R.id.search_view);
+        SearchView searchView = (SearchView) item.getActionView();
+        searchView.setOnQueryTextListener(this);
+        return true;
     }
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-    query_param_value=query;
-    Log.d(LOG_TAG, query_param_value);
-    getLoaderManager().restartLoader(0, null, this);
-    return true;
+        query_param_value = query;
+        Log.d(LOG_TAG, query_param_value);
+        getLoaderManager().restartLoader(0, null, this);
+        return true;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
 
-    query_param_value=newText;
-    Log.d(LOG_TAG, query_param_value);
-    getLoaderManager().restartLoader(0, null, this);
+        query_param_value = newText;
+        Log.d(LOG_TAG, query_param_value);
+        getLoaderManager().restartLoader(0, null, this);
 
-    return true;
+        return true;
 
     }
 }

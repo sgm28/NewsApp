@@ -16,7 +16,7 @@ import org.w3c.dom.Text;
 
 import java.util.List;
 
-public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder>  {
+public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
     //Fields
     // Store a List of News objects
@@ -43,15 +43,13 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder>  {
     /**
      * Need a ViewHolder class because the NewsAdapter needs a ViewHolder
      */                                                                 //implementing the OnClickListener
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
-    {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public ImageView imageArticle;
         public TextView title;
         public TextView section;
         public TextView author;
         public TextView date;
-
 
 
         OnNewsListener onNewsListener;
@@ -100,7 +98,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder>  {
         View NewsViewHolder = inflater.inflate(R.layout.news_item_template, parent, false);
 
         //Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(NewsViewHolder,onNewsListener);
+        ViewHolder viewHolder = new ViewHolder(NewsViewHolder, onNewsListener);
         return viewHolder;
     }
 
@@ -121,8 +119,13 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder>  {
         section.setText(news.getSection());
         date.setText(news.getDate());
         title.setText(news.getTitle());
-        imageView.setImageBitmap(news.getImageBitmap());
 
+        //Sometimes News Articles don't have a picture.
+        if (news.getImageBitmap() == null) {
+            imageView.setImageResource(R.drawable.newspaper);
+        } else {
+            imageView.setImageBitmap(news.getImageBitmap());
+        }
 
 
     }
