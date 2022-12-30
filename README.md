@@ -4,6 +4,11 @@ News is an Android Application that displays the latest news of the day.
 The app was a project given to me to complete by Udacity's Android Basic Nanodegree program.
 https://www.udacity.com/course/android-basics-nanodegree-by-google--nd803
 
+<img src='https://github.com/sgm28/NewsApp/blob/master/NewsApp/gif/NewsApp.gif' title='News Walkthrough' width=300 alt='News Walkthrough' />
+
+
+
+
 Instruction on Running the program:
 
 Install Java JDK and JRE if you do not have it install already.
@@ -27,3 +32,6 @@ Click on the folder you downloaded, then click okay.
 Click the green play button in the upper middle of Android studio.
 
 Wait for a few minutes;the app should start.
+
+
+
